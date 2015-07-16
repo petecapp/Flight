@@ -33,7 +33,7 @@ username.addEventListener('return', function(event) {
 password.addEventListener('return', function(event) {
   if (username.value != '' && password.value != '')  
     {  
-        loginReq.open("POST","http://app.gsdesign.com/rockets/post_auth.php");  
+        loginReq.open("POST","http://petecapp.com/flight/post_auth.php");  
         var params = {  
             username: username.value,  
             password: Ti.Utils.md5HexDigest(password.value)  

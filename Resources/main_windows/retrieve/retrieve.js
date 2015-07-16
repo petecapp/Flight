@@ -142,7 +142,8 @@ function setData()
 
 		};
 		
-		xhr.open("GET","http://app.gsdesign.com/rockets/get_map_data.php");
+		xhr.open("GET","http://petecapp.com/flight/get_map_data.php");
+		//xhr.open("GET","http://app.gsdesign.com/rockets/get_map_data.php");
 		
 		var params = {  
             latitude: e.coords.latitude,  

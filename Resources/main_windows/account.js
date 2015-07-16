@@ -179,7 +179,7 @@ createBtn.addEventListener('click',function(e)
 			{
 				createBtn.enabled = false;
 				createBtn.opacity = 0.3;
-				createReq.open("POST","http://app.gsdesign.com/rockets/post_register.php");
+				createReq.open("POST","http://petecapp.com/flight/post_register.php");
 				var params = {
 					username: username.value,
 					password: Ti.Utils.md5HexDigest(password1.value),

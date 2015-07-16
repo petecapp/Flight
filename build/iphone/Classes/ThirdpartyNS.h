@@ -7,8 +7,8 @@
  * WARNING: This is generated code. Modify at your own risk and without support.
  */
 
-#ifndef Rockets_ThirdpartyNS_h
-#define Rockets_ThirdpartyNS_h
+#ifndef Flight_ThirdpartyNS_h
+#define Flight_ThirdpartyNS_h
 
 #ifndef __TI_NAMESPACE_PREFIX_
 #define __TI_NAMESPACE_PREFIX_	TI

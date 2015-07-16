@@ -1033,8 +1033,8 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
 		UIDevice *currentDevice = [UIDevice currentDevice];
 		NSString *currentLocaleIdentifier = [[NSLocale currentLocale] localeIdentifier];
 		NSString *currentDeviceInfo = [NSString stringWithFormat:@"%@/%@; %@; %@;",[currentDevice model],[currentDevice systemVersion],[currentDevice systemName],currentLocaleIdentifier];
-		NSString *kRocketsUserAgentPrefix = [NSString stringWithFormat:@"%s%s%s %s%s","Appc","eler","ator","Tita","nium"];
-		userAgent = [[NSString stringWithFormat:@"%@/%s (%@)",kRocketsUserAgentPrefix,TI_VERSION_STR,currentDeviceInfo] retain];
+		NSString *kFlightUserAgentPrefix = [NSString stringWithFormat:@"%s%s%s %s%s","Appc","eler","ator","Tita","nium"];
+		userAgent = [[NSString stringWithFormat:@"%@/%s (%@)",kFlightUserAgentPrefix,TI_VERSION_STR,currentDeviceInfo] retain];
 	}
 	return userAgent;
 }
@@ -1185,7 +1185,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
             errorString = [error localizedDescription];
         } else {
             // If we have no data...
-            // This should never happen on a Rockets app using the node.js CLI
+            // This should never happen on a Flight app using the node.js CLI
             errorString = @"File not found";
         }
         if(errorString != nil) {

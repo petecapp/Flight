@@ -4,7 +4,7 @@ var win2 = Titanium.UI.currentWindow;
 Ti.Geolocation.purpose = "Retrieval of fired Rockets";
 
 var xhr = Titanium.Network.createHTTPClient();
-xhr.open("GET","http://app.gsdesign.com/rockets/get_map_data.php");
+xhr.open("GET","http://petecapp.com/flight/get_map_data.php");
 var params = {  
     latitude: win2.latitude,  
     longitude: win2.longitude  

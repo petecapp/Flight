@@ -5,7 +5,7 @@ var path = Titanium.Filesystem.resourcesDirectory + Titanium.Filesystem.separato
 var storedId = Titanium.App.Properties.getString("id");
 
 var imageView = Titanium.UI.createImageView ({
-		image: 'http://app.gsdesign.com/rockets/uploaded-photos/' + win.image,
+		image: 'http://petecapp.com/flight/uploaded-photos/' + win.image,
 		top: 60,
 		height:320
 });
@@ -160,7 +160,7 @@ Ti.App.addEventListener('rocketPickUp',function(e){
 		
 	};
 	
-	createReq.open("POST","http://app.gsdesign.com/rockets/post_rocket_retrieval.php");
+	createReq.open("POST","http://petecapp.com/flight/post_rocket_retrieval.php");
 	var params = {
 		id: win.id,
 		userId: storedId

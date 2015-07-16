@@ -10,8 +10,8 @@
 NSString * const TI_APPLICATION_DEPLOYTYPE = @"development";
 NSString * const TI_APPLICATION_ID = @"com.petecapp.flight";
 NSString * const TI_APPLICATION_PUBLISHER = @"petecapp";
-NSString * const TI_APPLICATION_URL = @"http://www.gsdesign.com";
-NSString * const TI_APPLICATION_NAME = @"Rockets";
+NSString * const TI_APPLICATION_URL = @"http://www.petecapp.com";
+NSString * const TI_APPLICATION_NAME = @"Flight";
 NSString * const TI_APPLICATION_VERSION = @"1.0";
 NSString * const TI_APPLICATION_DESCRIPTION = @"No description provided";
 NSString * const TI_APPLICATION_COPYRIGHT = @"2015 by Pete Capp";

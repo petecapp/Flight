@@ -2,18 +2,17 @@
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <sdk-version>4.1.0.GA</sdk-version>
     <deployment-targets>
-        <target device="tizen">false</target>
         <target device="mobileweb">true</target>
         <target device="iphone">true</target>
         <target device="ipad">true</target>
-        <target device="blackberry">false</target>
         <target device="android">true</target>
+        <target device="blackberry">false</target>
     </deployment-targets>
     <id>com.petecapp.flight</id>
-    <name>Rockets</name>
+    <name>Flight</name>
     <version>1.0</version>
     <publisher>petecapp</publisher>
-    <url>http://www.gsdesign.com</url>
+    <url>http://www.petecapp.com</url>
     <description>No description provided</description>
     <copyright>2015 by Pete Capp</copyright>
     <icon>default_app_logo.png</icon>
@@ -26,17 +25,27 @@
     <navbar-hidden>false</navbar-hidden>
     <analytics>true</analytics>
     <guid>03321720-2153-4509-9333-90108fd94d5b</guid>
-    <iphone>
-        <orientations device="iphone">
-            <orientation>Ti.UI.PORTRAIT</orientation>
-        </orientations>
-        <orientations device="ipad">
-            <orientation>Ti.UI.PORTRAIT</orientation>
-            <orientation>Ti.UI.UPSIDE_PORTRAIT</orientation>
-            <orientation>Ti.UI.LANDSCAPE_LEFT</orientation>
-            <orientation>Ti.UI.LANDSCAPE_RIGHT</orientation>
-        </orientations>
-    </iphone>
+	<ios>
+        <plist>
+            <dict>
+            	<key>NSLocationWhenInUseUsageDescription</key>
+				<string>Test NSLocationWhenInUseUsageDescription</string>
+				<key>NSLocationAlwaysUsageDescription</key>
+				<string>Test NSLocationAlwaysUsageDescription</string>
+		        <key>UISupportedInterfaceOrientations~iphone</key>
+                <array>
+			        <string>Ti.UI.PORTRAIT</string>
+		        </array>
+		        <key>UISupportedInterfaceOrientations~ipad</key>
+                <array>
+			        <string>Ti.UI.PORTRAIT</string>
+			        <string>Ti.UI.UPSIDE_PORTRAIT</string>
+			        <string>Ti.UI.LANDSCAPE_LEFT</string>
+			        <string>Ti.UI.LANDSCAPE_RIGHT</string>
+		        </array>
+            </dict>
+        </plist>
+	</ios>
     <android xmlns:android="http://schemas.android.com/apk/res/android"/>
     <modules>
         <module platform="iphone">ti.map</module>

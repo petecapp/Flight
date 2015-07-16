@@ -17,7 +17,7 @@
 			<string>com.petecapp.flight</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>rockets</string>
+				<string>flight</string>
 			</array>
 		</dict>
 	</array>
@@ -45,16 +45,20 @@
 	<false/>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleBlackOpaque</string>
-	<key>UISupportedInterfaceOrientations</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Test NSLocationWhenInUseUsageDescription</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Test NSLocationAlwaysUsageDescription</string>
+	<key>UISupportedInterfaceOrientations~iphone</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
+		<string>Ti.UI.PORTRAIT</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>Ti.UI.PORTRAIT</string>
+		<string>Ti.UI.UPSIDE_PORTRAIT</string>
+		<string>Ti.UI.LANDSCAPE_LEFT</string>
+		<string>Ti.UI.LANDSCAPE_RIGHT</string>
 	</array>
 	<key>CFBundleIconFiles</key>
 	<array>

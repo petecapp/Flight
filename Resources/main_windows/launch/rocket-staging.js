@@ -543,7 +543,7 @@ Ti.App.addEventListener('calculate',function(e){
 	  	};
 	  	
 	  	// open the client
-		xhr.open("POST","http://app.gsdesign.com/rockets/post_rocket_launch.php");
+		xhr.open("POST","http://petecapp.com/flight/post_rocket_launch.php");
 						
 		// send the data
 		var params = {

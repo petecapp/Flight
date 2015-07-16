@@ -33,7 +33,7 @@
     BOOL pageChanged;
 }
 
-#pragma mark - Rockets Internal Use Only
+#pragma mark - Flight Internal Use Only
 -(void)manageRotation;
 -(UIScrollView*)scrollview;
 -(void)refreshScrollView:(CGRect)visibleBounds readd:(BOOL)readd;

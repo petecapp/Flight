@@ -39,7 +39,7 @@ typedef enum {
 } EncodingError;
 
 /**
- Rockets orientation flags.
+ Flight orientation flags.
  */
 typedef enum
 {

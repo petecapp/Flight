@@ -5,11 +5,11 @@ var path = Titanium.Filesystem.resourcesDirectory + Titanium.Filesystem.separato
 var storedId = Titanium.App.Properties.getString("id");
 
 var imageView = Titanium.UI.createImageView ({
-		image: 'http://app.gsdesign.com/rockets/uploaded-photos/' + win.image,
+		image: 'http://petecapp.com/flight/uploaded-photos/' + win.image,
 		top: 60,
 		height:320
 });
-alert('http://app.gsdesign.com/rockets/uploaded-photos/' + win.image);
+alert('http://petecapp.com/flight/uploaded-photos/' + win.image);
 if (win.image == ''){
 	//Do Nothing
 }

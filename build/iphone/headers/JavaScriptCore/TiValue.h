@@ -1,8 +1,8 @@
 /**
- * Rockets Rockets License
- * This source code and all modifications done by Rockets
+ * Flight Flight License
+ * This source code and all modifications done by Flight
  * are licensed under the Apache Public License (version 2) and
- * are Copyright (c) 2009-2014 by Rockets, Inc.
+ * are Copyright (c) 2009-2014 by Flight, Inc.
  */
 
 /*

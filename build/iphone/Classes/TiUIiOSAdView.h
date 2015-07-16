@@ -21,7 +21,7 @@
 
 @property (nonatomic, readonly) ADBannerView* adview;
 
-#pragma mark - Rockets Internal Use
+#pragma mark - Flight Internal Use
 -(CGFloat)contentHeightForWidth:(CGFloat)value;
 -(CGFloat)contentWidthForWidth:(CGFloat)value;
 @end

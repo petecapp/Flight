@@ -15,7 +15,7 @@ function setData()
 {
 	//Rockets Fired and Profile Pic
 	var xhr = Titanium.Network.createHTTPClient();
-	xhr.open("GET","http://app.gsdesign.com/rockets/get_rocket_list_basic.php");
+	xhr.open("GET","http://petecapp.com/flight/get_rocket_list_basic.php");
 	var params = {
 		userId: storedId
 	};
@@ -35,14 +35,14 @@ function setData()
 		    }  
 		    else  
 		    {  
-		        profileImage.image = 'http://app.gsdesign.com/rockets/profile-images/' + data.markers[i].profileImage;
+		        profileImage.image = 'http://petecapp.com/flight/profile-images/' + data.markers[i].profileImage;
 		    } 
 		}
 	};
 	
 	//Rockets Fired
 	var xhrFired = Titanium.Network.createHTTPClient();
-	xhrFired.open("GET","http://app.gsdesign.com/rockets/get_rocket_list_fired.php");
+	xhrFired.open("GET","http://petecapp.com/flight/get_rocket_list_fired.php");
 	var params = {
 		userId: storedId
 	};
@@ -278,7 +278,7 @@ photoDialog.addEventListener('click',function(e)
 			  	};
 			  	
 			  	// open the client
-				xhr.open("POST","http://app.gsdesign.com/rockets/post_profile_image.php");
+				xhr.open("POST","http://petecapp.com/flight/post_profile_image.php");
 								
 				// send the data
 				var params = {
@@ -349,7 +349,7 @@ photoDialog.addEventListener('click',function(e)
 				  	};
 				  	
 				  	// open the client
-					xhr.open("POST","http://app.gsdesign.com/rockets/post_profile_image.php");
+					xhr.open("POST","http://petecapp.com/flight/post_profile_image.php");
 									
 					// send the data
 					var params = {

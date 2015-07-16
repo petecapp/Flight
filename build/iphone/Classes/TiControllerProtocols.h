@@ -52,7 +52,7 @@
 @end
 
 /**
- Protocol for containment controller. Implemented by UIViewControllers that can host Rockets Windows
+ Protocol for containment controller. Implemented by UIViewControllers that can host Flight Windows
  */
 @protocol TiControllerContainment <NSObject>
 @required

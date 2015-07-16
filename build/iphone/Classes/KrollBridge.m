@@ -32,7 +32,7 @@ extern NSString * const TI_APPLICATION_DEPLOYTYPE;
 extern NSString * const TI_APPLICATION_GUID;
 extern NSString * const TI_APPLICATION_BUILD_TYPE;
 
-NSString * Rockets$ModuleRequireFormat = @"(function(exports){"
+NSString * Flight$ModuleRequireFormat = @"(function(exports){"
 		"var __OXP=exports;var module={'exports':exports};var __dirname=\"%@\";var __filename=\"%@\";%@;\n"
 		"if(module.exports !== __OXP){return module.exports;}"
 		"return exports;})({})";
@@ -42,7 +42,7 @@ NSString * Rockets$ModuleRequireFormat = @"(function(exports){"
 void TiBindingRunLoopAnnounceStart(TiBindingRunLoop runLoop);
 
 
-@implementation RocketsObject
+@implementation FlightObject
 
 -(NSDictionary*)modules
 {
@@ -332,7 +332,7 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 	[self removeProxies];
 	RELEASE_TO_NIL(preload);
 	RELEASE_TO_NIL(context);
-	RELEASE_TO_NIL(_rockets);
+	RELEASE_TO_NIL(_flight);
 	OSSpinLockLock(&krollBridgeRegistryLock);
 	CFSetRemoveValue(krollBridgeRegistry, self);
 	OSSpinLockUnlock(&krollBridgeRegistryLock);
@@ -545,7 +545,7 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 -(void)gc
 {
 	[context gc];
-	[_rockets gc];
+	[_flight gc];
 }
 
 #pragma mark Delegate
@@ -557,18 +557,18 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 
 -(void)didStartNewContext:(KrollContext*)kroll
 {
-	// create Rockets global object
+	// create Flight global object
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     
-    // Load the "Rockets" object into the global scope
+    // Load the "Flight" object into the global scope
 	NSString *basePath = (url==nil) ? [TiHost resourcePath] : [[[url path] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"."];
-	_rockets = [[RocketsObject alloc] initWithContext:kroll host:host context:self baseURL:[NSURL fileURLWithPath:basePath]];
+	_flight = [[FlightObject alloc] initWithContext:kroll host:host context:self baseURL:[NSURL fileURLWithPath:basePath]];
 	
 	TiContextRef jsContext = [kroll context];
-	TiValueRef tiRef = [KrollObject toValue:kroll value:_rockets];
+	TiValueRef tiRef = [KrollObject toValue:kroll value:_flight];
 	
-	NSString *_rocketsNS = [NSString stringWithFormat:@"T%sanium","it"];
-	TiStringRef prop = TiStringCreateWithCFString((CFStringRef) _rocketsNS);
+	NSString *_flightNS = [NSString stringWithFormat:@"T%sanium","it"];
+	TiStringRef prop = TiStringCreateWithCFString((CFStringRef) _flightNS);
 	TiStringRef prop2 = TiStringCreateWithCFString((CFStringRef) [NSString stringWithFormat:@"%si","T"]);
 	TiObjectRef globalRef = TiContextGetGlobalObject(jsContext);
 	TiObjectSetProperty(jsContext, globalRef, prop, tiRef,
@@ -590,7 +590,7 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 	{
 		for (NSString *name in preload)
 		{
-			KrollObject *ti = (KrollObject*)[_rockets valueForKey:name];
+			KrollObject *ti = (KrollObject*)[_flight valueForKey:name];
 			NSDictionary *values = [preload valueForKey:name];
 			for (id key in values)
 			{
@@ -630,7 +630,7 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 		NSNotification *notification = [NSNotification notificationWithName:kTiContextShutdownNotification object:self];
 		[[NSNotificationCenter defaultCenter] postNotification:notification];
 	}
-	[_rockets gc];
+	[_flight gc];
 	
 	if (shutdownCondition)
 	{
@@ -645,7 +645,7 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 {
 	TiThreadPerformOnMainThread(^{[self unregisterForMemoryWarning];}, NO);
 	[self removeProxies];
-	RELEASE_TO_NIL(_rockets);
+	RELEASE_TO_NIL(_flight);
     RELEASE_TO_NIL(console);
 	RELEASE_TO_NIL(context);
 	RELEASE_TO_NIL(preload);
@@ -752,7 +752,7 @@ CFMutableSetRef	krollBridgeRegistry = nil;
 	 */
 	
 	NSString *filename = [sourceURL lastPathComponent];
-	NSString *js = [[NSString alloc] initWithFormat:Rockets$ModuleRequireFormat, dirname, filename,code];
+	NSString *js = [[NSString alloc] initWithFormat:Flight$ModuleRequireFormat, dirname, filename,code];
 
 	/* This most likely should be integrated with normal code flow, but to
 	 * minimize impact until a in-depth reconsideration of KrollContext can be
@@ -932,7 +932,7 @@ loadNativeJS:
 #endif
 		if (![wrapper respondsToSelector:@selector(replaceValue:forKey:notification:)]) {
             [self setCurrentURL:oldURL];
-			@throw [NSException exceptionWithName:@"org.rockets.kroll" 
+			@throw [NSException exceptionWithName:@"org.flight.kroll" 
                                            reason:[NSString stringWithFormat:@"Module \"%@\" failed to leave a valid exports object",path] 
                                          userInfo:nil];
 		}

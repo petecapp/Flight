@@ -68,10 +68,10 @@
 {
 	switch((int)styleCache)
 	{
-		case UIRocketsNativeItemInfoLight:
-		case UIRocketsNativeItemInfoDark:
+		case UIFlightNativeItemInfoLight:
+		case UIFlightNativeItemInfoDark:
 			return 18;
-		case UIRocketsNativeItemDisclosure:
+		case UIFlightNativeItemDisclosure:
 			return 29;
 		default: {
 			break;
@@ -84,10 +84,10 @@
 {
 	switch((int)styleCache)
 	{
-		case UIRocketsNativeItemInfoLight:
-		case UIRocketsNativeItemInfoDark:
+		case UIFlightNativeItemInfoLight:
+		case UIFlightNativeItemInfoDark:
 			return 19;
-		case UIRocketsNativeItemDisclosure:
+		case UIFlightNativeItemDisclosure:
 			return 31;
 		default: {
 			break;
@@ -101,9 +101,9 @@
 {
 	switch ((int)styleCache)
 	{
-		case UIRocketsNativeItemInfoLight:
-		case UIRocketsNativeItemInfoDark:
-		case UIRocketsNativeItemDisclosure:
+		case UIFlightNativeItemInfoLight:
+		case UIFlightNativeItemInfoDark:
+		case UIFlightNativeItemDisclosure:
 			return suggestedResizing & ~(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		default: {
 			break;

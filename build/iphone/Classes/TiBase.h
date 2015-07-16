@@ -60,7 +60,7 @@ extern "C" {
 	#define KMETHOD_DEBUG MEMORY_DEBUG
 #endif
 
-// in simulator we redefine to format for Rockets Developer console
+// in simulator we redefine to format for Flight Developer console
 
 
 #define TI_INLINE static __inline__
@@ -309,13 +309,13 @@ void TiExceptionThrowWithNameAndReason(NSString *exceptionName, NSString *reason
 #define DEFINE_EXCEPTIONS \
 - (void) throwException:(NSString *) reason subreason:(NSString*)subreason location:(NSString *)location\
 {\
-	NSString * exceptionName = [@"org.rockets." stringByAppendingString:NSStringFromClass([self class])];\
+	NSString * exceptionName = [@"org.flight." stringByAppendingString:NSStringFromClass([self class])];\
 	TiExceptionThrowWithNameAndReason(exceptionName,reason,subreason,location);\
 }\
 \
 + (void) throwException:(NSString *) reason subreason:(NSString*)subreason location:(NSString *)location\
 {\
-	NSString * exceptionName = @"org.rockets";\
+	NSString * exceptionName = @"org.flight";\
 	TiExceptionThrowWithNameAndReason(exceptionName,reason,subreason,location);\
 }\
 
@@ -426,28 +426,28 @@ DebugLog(@"[WARN] Ti%@.%@ DEPRECATED in %@, in favor of %@.",@"tanium",api,in,ne
 
  //MUST BE NEGATIVE, as it inhabits the same space as UIBarButtonSystemItem
 enum {
-	UIRocketsNativeItemNone = -1, 
-	UIRocketsNativeItemSpinner = -2,
-	UIRocketsNativeItemProgressBar = -3,
+	UIFlightNativeItemNone = -1, 
+	UIFlightNativeItemSpinner = -2,
+	UIFlightNativeItemProgressBar = -3,
 	
-	UIRocketsNativeItemSlider = -4,
-	UIRocketsNativeItemSwitch = -5,
-	UIRocketsNativeItemMultiButton = -6,
-	UIRocketsNativeItemSegmented = -7,
+	UIFlightNativeItemSlider = -4,
+	UIFlightNativeItemSwitch = -5,
+	UIFlightNativeItemMultiButton = -6,
+	UIFlightNativeItemSegmented = -7,
 	
-	UIRocketsNativeItemTextView = -8,
-	UIRocketsNativeItemTextField = -9,
-	UIRocketsNativeItemSearchBar = -10,
+	UIFlightNativeItemTextView = -8,
+	UIFlightNativeItemTextField = -9,
+	UIFlightNativeItemSearchBar = -10,
 	
-	UIRocketsNativeItemPicker = -11,
-	UIRocketsNativeItemDatePicker = -12,
+	UIFlightNativeItemPicker = -11,
+	UIFlightNativeItemDatePicker = -12,
 	
-	UIRocketsNativeItemInfoLight = -13,
-	UIRocketsNativeItemInfoDark = -14,
+	UIFlightNativeItemInfoLight = -13,
+	UIFlightNativeItemInfoDark = -14,
 	
-	UIRocketsNativeItemDisclosure = -15,
+	UIFlightNativeItemDisclosure = -15,
 	
-	UIRocketsNativeItemContactAdd = -16
+	UIFlightNativeItemContactAdd = -16
 };
 
 
@@ -630,7 +630,7 @@ void incrementKrollCounter();
 void decrementKrollCounter();
     
 /**
- *	TiThreadPerformOnMainThread should replace all Rockets instances of
+ *	TiThreadPerformOnMainThread should replace all Flight instances of
  *	performSelectorOnMainThread, ESPECIALLY if wait is to be yes. That way,
  *	exceptional-case main thread activities can process them outside of the
  *	standard event loop.

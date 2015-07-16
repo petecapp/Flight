@@ -13,7 +13,7 @@
 @class TiHost;
 
 /**
- The base class for all Rockets modules
+ The base class for all Flight modules
  */
 @interface TiModule : TiProxy 
 {
@@ -51,30 +51,30 @@
 // lifecycle
 
 /**
- Rockets Platform calls this method on startup.
+ Flight Platform calls this method on startup.
  */
 -(void)startup;
 
 /**
- Rockets Platform calls this method on shutdown.
+ Flight Platform calls this method on shutdown.
  @param sender The sender of the event.
  */
 -(void)shutdown:(id)sender;
 
 /**
- Rockets Platform calls this method on suspend.
+ Flight Platform calls this method on suspend.
  @param sender The sender of the event.
  */
 -(void)suspend:(id)sender;
 
 /**
- Rockets Platform calls this method on entering background.
+ Flight Platform calls this method on entering background.
  @param sender The sender of the event.
  */
 -(void)paused:(id)sender;
 
 /**
- Rockets Platform calls this method on resume.
+ Flight Platform calls this method on resume.
  @param sender The sender of the event.
  */
 -(void)resume:(id)sender;

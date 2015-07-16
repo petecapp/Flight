@@ -7,8 +7,8 @@
  * WARNING: This is generated code. Modify at your own risk and without support.
  */
 
-#ifndef Rockets_TiToJS_h
-#define Rockets_TiToJS_h
+#ifndef Flight_TiToJS_h
+#define Flight_TiToJS_h
 
 #ifdef USE_JSCORE_FRAMEWORK
 

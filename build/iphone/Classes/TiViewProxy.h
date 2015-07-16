@@ -17,7 +17,7 @@
  */
 @protocol TiKeyboardFocusableView
 
-#pragma mark Public Rockets APIs.
+#pragma mark Public Flight APIs.
 
 /**
  Tells the view to focus.

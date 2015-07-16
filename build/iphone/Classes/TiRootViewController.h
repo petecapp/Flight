@@ -54,7 +54,7 @@
     NSInteger activeAlertControllerCount;
 }
 
-//Rockets Support
+//Flight Support
 -(CGRect)resizeView;
 -(void)repositionSubviews;
 -(UIView *)topWindowProxyView;

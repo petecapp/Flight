@@ -19,7 +19,7 @@ Titanium.Geolocation.getCurrentPosition(function(e) {
 	function setData()
 	{
 		var xhr = Titanium.Network.createHTTPClient();
-		xhr.open("GET","http://app.gsdesign.com/rockets/get_rocket_list_for_profile.php");
+		xhr.open("GET","http://petecapp.com/flight/get_rocket_list_for_profile.php");
 		var params = {
 			userId: storedId,
 			latitude: e.coords.latitude,  
