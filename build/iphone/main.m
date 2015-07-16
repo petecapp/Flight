@@ -8,14 +8,14 @@
 #define STRING(x) _QUOTEME(x)
 
 NSString * const TI_APPLICATION_DEPLOYTYPE = @"development";
-NSString * const TI_APPLICATION_ID = @"com.gsdesign.rockets";
-NSString * const TI_APPLICATION_PUBLISHER = @"celst";
+NSString * const TI_APPLICATION_ID = @"com.petecapp.flight";
+NSString * const TI_APPLICATION_PUBLISHER = @"petecapp";
 NSString * const TI_APPLICATION_URL = @"http://www.gsdesign.com";
 NSString * const TI_APPLICATION_NAME = @"Rockets";
 NSString * const TI_APPLICATION_VERSION = @"1.0";
 NSString * const TI_APPLICATION_DESCRIPTION = @"No description provided";
-NSString * const TI_APPLICATION_COPYRIGHT = @"2014 by Pete Capp";
-NSString * const TI_APPLICATION_GUID = @"1f6a3c9a-0f0a-4f28-8a4f-f675e1bb8a1a";
+NSString * const TI_APPLICATION_COPYRIGHT = @"2015 by Pete Capp";
+NSString * const TI_APPLICATION_GUID = @"03321720-2153-4509-9333-90108fd94d5b";
 BOOL const TI_APPLICATION_ANALYTICS = true;
 NSString * const TI_APPLICATION_BUILD_TYPE = @"";
 

@@ -10,7 +10,7 @@
 #if defined(USE_TI_FILESYSTEM) || defined(USE_TI_DATABASE) || defined(USE_TI_MEDIA)
 
 #include <sys/xattr.h>
-
+#import "TiBase.h"
 #import "TiUtils.h"
 #import "TiBlob.h"
 #import "TiFilesystemFileProxy.h"
@@ -155,6 +155,29 @@ FILENOOP(setHidden:(id)x);
 	return [resultDict objectForKey:NSFileSystemFreeSize];
 }
 
+-(NSString *)getProtectionKey:(id)args
+{
+	NSError *error = nil;
+	NSDictionary * resultDict = [fm attributesOfItemAtPath:path error:&error];
+	if (error != nil) {
+		NSLog(@"[ERROR] Error getting protection key: %@", [TiUtils messageFromError:error]);
+		return nil;
+	}
+	return [resultDict objectForKey:NSFileProtectionKey];
+}
+
+-(NSNumber *)setProtectionKey:(id)args
+{
+	ENSURE_SINGLE_ARG(args, NSString);
+	NSError *error = nil;
+	BOOL result = [fm setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:args, NSFileProtectionKey, nil] ofItemAtPath:path error:&error];
+	if (error != nil) {
+		NSLog(@"[ERROR] Error setting protection key: %@", [TiUtils messageFromError:error]);
+		return NUMBOOL(NO);
+	}
+	return NUMBOOL(YES);
+}
+
 -(id)createDirectory:(id)args
 {
 	BOOL result = NO;
@@ -199,7 +222,7 @@ FILENOOP(setHidden:(id)x);
 			[fm createDirectoryAtPath:[path stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
 			//We don't care if this fails.
 		}
-		result = [[NSData data] writeToFile:path options:NSDataWritingFileProtectionComplete error:nil];
+		result = [[NSData data] writeToFile:path options:NSDataWritingFileProtectionComplete | NSDataWritingAtomic error:nil];
 	}			
 	return NUMBOOL(result);
 }
@@ -457,7 +480,7 @@ FILENOOP(setHidden:(id)x);
 	} 
 	else 
 	{
-		[[NSData data] writeToFile:resultPath options:NSDataWritingFileProtectionComplete error:&error];
+		[[NSData data] writeToFile:resultPath options:NSDataWritingFileProtectionComplete | NSDataWritingAtomic error:&error];
 	}
 	
 	if (error != nil)

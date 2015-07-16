@@ -1,0 +1,1 @@
+/Users/pcapp/Repositories/Flight/Resources/main_windows/launch/rocket-staging.js

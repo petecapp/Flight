@@ -74,10 +74,8 @@
 
 @interface TiRootViewController (notifications_internal)
 -(void)didOrientNotify:(NSNotification *)notification;
--(void)keyboardWillHide:(NSNotification*)notification;
--(void)keyboardWillShow:(NSNotification*)notification;
--(void)keyboardDidHide:(NSNotification*)notification;
--(void)keyboardDidShow:(NSNotification*)notification;
+-(void)keyboardWillChangeFrame:(NSNotification*)notification;
+-(void)keyboardDidChangeFrame:(NSNotification*)notification;
 -(void)adjustFrameForUpSideDownOrientation:(NSNotification*)notification;
 @end
 
@@ -136,10 +134,8 @@
         WARN_IF_BACKGROUND_THREAD;	//NSNotificationCenter is not threadsafe!
         NSNotificationCenter * nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(didOrientNotify:) name:UIDeviceOrientationDidChangeNotification object:nil];
-        [nc addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
-        [nc addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-        [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-        [nc addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+        [nc addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [nc addObserver:self selector:@selector(keyboardDidChangeFrame:) name:UIKeyboardDidChangeFrameNotification object:nil];
         [nc addObserver:self selector:@selector(adjustFrameForUpSideDownOrientation:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     }
@@ -415,37 +411,6 @@
     return keyboardVisible;
 }
 
-- (void)keyboardWillHide:(NSNotification*)notification
-{
-	NSDictionary *userInfo = [notification userInfo];
-	leaveCurve = [[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
-	leaveDuration = [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-	[self extractKeyboardInfo:userInfo];
-	keyboardVisible = NO;
-    
-	if(!updatingAccessoryView)
-	{
-		updatingAccessoryView = YES;
-		[self performSelector:@selector(handleNewKeyboardStatus) withObject:nil afterDelay:0.0];
-	}
-    
-}
-
-- (void)keyboardWillShow:(NSNotification*)notification
-{
-	NSDictionary *userInfo = [notification userInfo];
-	enterCurve = [[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
-	enterDuration = [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-	[self extractKeyboardInfo:userInfo];
-	keyboardVisible = YES;
-    
-	if(!updatingAccessoryView)
-	{
-		updatingAccessoryView = YES;
-		[self performSelector:@selector(handleNewKeyboardStatus) withObject:nil afterDelay:0.0];
-	}
-}
-
 - (void)adjustKeyboardHeight:(NSNumber*)_keyboardVisible
 {
     if ( (updatingAccessoryView == NO) && ([TiUtils boolValue:_keyboardVisible] == keyboardVisible) ) {
@@ -457,19 +422,39 @@
     }
 }
 
-- (void)keyboardDidHide:(NSNotification*)notification
+-(void)keyboardDidChangeFrame:(NSNotification*)notification
 {
+    CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
 	startFrame = endFrame;
-    [self performSelector:@selector(adjustKeyboardHeight:) withObject:[NSNumber numberWithBool:NO]];
+    if (CGRectIntersectsRect(keyboardEndFrame, screenRect)) {
+        // Keyboard is visible
+        [self performSelector:@selector(adjustKeyboardHeight:) withObject:[NSNumber numberWithBool:YES] afterDelay:enterDuration];
+    } else {
+        // Keyboard is hidden
+        [self performSelector:@selector(adjustKeyboardHeight:) withObject:[NSNumber numberWithBool:NO]];
+    }
 }
 
-- (void)keyboardDidShow:(NSNotification*)notification
+-(void)keyboardWillChangeFrame:(NSNotification*)notification
 {
-	startFrame = endFrame;
-    //The endingFrame is not always correctly calculated when rotating.
-    //This method call ensures correct calculation at the end
-    //See TIMOB-8720 for a test case
-    [self performSelector:@selector(adjustKeyboardHeight:) withObject:[NSNumber numberWithBool:YES] afterDelay:enterDuration];
+    NSDictionary *userInfo = [notification userInfo];
+    enterCurve = [[userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    enterDuration = [[userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    [self extractKeyboardInfo:userInfo];
+    CGRect keyboardEndFrame = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    startFrame = endFrame;
+    if (CGRectIntersectsRect(keyboardEndFrame, screenRect)) {        // Keyboard is visible
+        keyboardVisible = YES;
+    } else {
+        // Keyboard is hidden
+        keyboardVisible = NO;
+    }
+    if(!updatingAccessoryView) {
+        updatingAccessoryView = YES;
+        [self performSelector:@selector(handleNewKeyboardStatus) withObject:nil afterDelay:0.0];
+    }
 }
 
 -(UIView *)viewForKeyboardAccessory;
@@ -545,7 +530,15 @@
 	TiUIView * scrolledView;	//We check at the update anyways.
     
 	UIView * focusedToolbar = [self keyboardAccessoryViewForProxy:keyboardFocusedProxy withView:&scrolledView];
-	CGRect focusedToolbarBounds = CGRectMake(0, 0, endingFrame.size.width, [keyboardFocusedProxy keyboardAccessoryHeight]);
+    
+    	CGRect focusedToolbarBounds;
+    	//special case for undocked split keyboard
+    	if (CGRectEqualToRect(CGRectZero, endingFrame)) {
+        	focusedToolbarBounds = CGRectMake(0, 0, targetedFrame.size.width, [keyboardFocusedProxy keyboardAccessoryHeight]);
+    	}
+    	else {
+        	focusedToolbarBounds = CGRectMake(0, 0, endingFrame.size.width, [keyboardFocusedProxy keyboardAccessoryHeight]);
+    	}
 	[focusedToolbar setBounds:focusedToolbarBounds];
     
     CGFloat keyboardHeight = endingFrame.origin.y;
@@ -576,7 +569,10 @@
 	//This is if the keyboard is hiding or showing due to hardware.
 	if ((accessoryView != nil) && !CGRectEqualToRect(targetedFrame, endingFrame))
 	{
-		targetedFrame = endingFrame;
+		//endingFrame is set to zero when splitting or merging keyboard, so don't do anything here
+		if (!CGRectEqualToRect(CGRectZero, endingFrame)) {
+			targetedFrame = endingFrame;
+		}
 		if([accessoryView superview] != ourView)
 		{
 			targetedFrame = [ourView convertRect:endingFrame toView:[accessoryView superview]];
@@ -974,7 +970,7 @@
     UIViewController* presentedViewController = nil;
     while ( topmostController != nil ) {
         presentedViewController = [topmostController presentedViewController];
-        if ( (presentedViewController != nil) && checkPopover && [TiUtils isIOS8OrGreater]) {
+        if ((presentedViewController != nil) && checkPopover && [TiUtils isIOS8OrGreater]) {
             if (presentedViewController.modalPresentationStyle == UIModalPresentationPopover) {
                 presentedViewController = nil;
             } else if ([presentedViewController isKindOfClass:[UIAlertController class]]) {
@@ -1070,33 +1066,24 @@
         }
         
         CGRect mainScreenBounds = [[UIScreen mainScreen] bounds];
-        CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
         CGRect viewBounds = [[self view] bounds];
         
-        if ([TiUtils isIOS7OrGreater]) {
-            //Need to do this to force navigation bar to draw correctly on iOS7
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTiFrameAdjustNotification object:nil];
-            if (statusBarFrame.size.height > 20) {
-                if (viewBounds.size.height != (mainScreenBounds.size.height - statusBarFrame.size.height)) {
-                    CGRect newBounds = CGRectMake(0, 0, mainScreenBounds.size.width, mainScreenBounds.size.height - statusBarFrame.size.height);
-                    CGPoint newCenter = CGPointMake(mainScreenBounds.size.width/2, (mainScreenBounds.size.height - statusBarFrame.size.height)/2);
-                    [[self view] setBounds:newBounds];
-                    [[self view] setCenter:newCenter];
-                    [[self view] setNeedsLayout];
-                }
-            } else {
-                if (viewBounds.size.height != mainScreenBounds.size.height) {
-                    CGRect newBounds = CGRectMake(0, 0, mainScreenBounds.size.width, mainScreenBounds.size.height);
-                    CGPoint newCenter = CGPointMake(mainScreenBounds.size.width/2, mainScreenBounds.size.height/2);
-                    [[self view] setBounds:newBounds];
-                    [[self view] setCenter:newCenter];
-                    [[self view] setNeedsLayout];
-                }
+        //Need to do this to force navigation bar to draw correctly on iOS7
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTiFrameAdjustNotification object:nil];
+        if (statusBarFrame.size.height > 20) {
+            if (viewBounds.size.height != (mainScreenBounds.size.height - statusBarFrame.size.height)) {
+                CGRect newBounds = CGRectMake(0, 0, mainScreenBounds.size.width, mainScreenBounds.size.height - statusBarFrame.size.height);
+                CGPoint newCenter = CGPointMake(mainScreenBounds.size.width/2, (mainScreenBounds.size.height - statusBarFrame.size.height)/2);
+                [[self view] setBounds:newBounds];
+                [[self view] setCenter:newCenter];
+                [[self view] setNeedsLayout];
             }
-            
         } else {
-            if (viewBounds.size.height != appFrame.size.height) {
-                [[self view] setFrame:appFrame];
+            if (viewBounds.size.height != mainScreenBounds.size.height) {
+                CGRect newBounds = CGRectMake(0, 0, mainScreenBounds.size.width, mainScreenBounds.size.height);
+                CGPoint newCenter = CGPointMake(mainScreenBounds.size.width/2, mainScreenBounds.size.height/2);
+                [[self view] setBounds:newBounds];
+                [[self view] setCenter:newCenter];
                 [[self view] setNeedsLayout];
             }
         }
@@ -1666,7 +1653,7 @@
 
 - (void) updateStatusBar
 {
-    if ([TiUtils isIOS7OrGreater] && viewControllerControlsStatusBar) {
+    if (viewControllerControlsStatusBar) {
         [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate) withObject:nil];
     } else {
         [[UIApplication sharedApplication] setStatusBarHidden:[self prefersStatusBarHidden] withAnimation:UIStatusBarAnimationNone];

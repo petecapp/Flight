@@ -53,6 +53,8 @@
 	[self replaceValue:nil forKey:@"badge" notification:NO];
 	[self replaceValue:NUMBOOL(YES) forKey:@"iconIsMask" notification:NO];
 	[self replaceValue:NUMBOOL(YES) forKey:@"activeIconIsMask" notification:NO];
+	[self replaceValue:nil forKey:@"titleColor" notification:NO];
+	[self replaceValue:nil forKey:@"activeTitleColor" notification:NO];
 	[super _configure];
 }
 
@@ -219,9 +221,8 @@
 		[self setBadge:[self valueForKey:@"badge"]];
 		controllerStack = [[NSMutableArray alloc] init];
 		[controllerStack addObject:[self rootController]];
-		if ([TiUtils isIOS7OrGreater]) {
-			[controller.interactivePopGestureRecognizer addTarget:self action:@selector(popGestureStateHandler:)];
-		}
+		[controller.interactivePopGestureRecognizer addTarget:self action:@selector(popGestureStateHandler:)];
+
 	}
 	return controller;
 }
@@ -539,6 +540,15 @@
     
     systemTab = NO;
     ourItem = [[[UITabBarItem alloc] initWithTitle:title image:image selectedImage:activeImage] autorelease];
+
+    TiColor *titleColor = [TiUtils colorValue:[self valueForKey:@"titleColor"]];
+    if (titleColor != nil) {
+        [ourItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[titleColor color], NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
+    }
+    TiColor *activeTitleColor = [TiUtils colorValue:[self valueForKey:@"activeTitleColor"]];
+    if (activeTitleColor != nil) {
+        [ourItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[activeTitleColor color], NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    }
     [ourItem setBadgeValue:badgeValue];
     [rootController setTabBarItem:ourItem];
 }
@@ -577,9 +587,6 @@
 
 -(void)setIconIsMask:(id)value
 {
-    if (![TiUtils isIOS7OrGreater]) {
-        return;
-    }
     [self replaceValue:value forKey:@"iconIsMask" notification:NO];
     BOOL newValue = ![TiUtils boolValue:value def:YES];
     if (newValue != iconOriginal) {
@@ -588,11 +595,20 @@
     }
 }
 
+-(void)setTitleColor:(id)value
+{
+    [self replaceValue:value forKey:@"titleColor" notification:NO];
+    [self updateTabBarItem];
+}
+
+-(void)setActiveTitleColor:(id)value
+{
+    [self replaceValue:value forKey:@"activeTitleColor" notification:NO];
+    [self updateTabBarItem];
+}
+
 -(void)setActiveIconIsMask:(id)value
 {
-    if (![TiUtils isIOS7OrGreater]) {
-        return;
-    }
     [self replaceValue:value forKey:@"activeIconIsMask" notification:NO];
     BOOL newValue = ![TiUtils boolValue:value def:YES];
     if (newValue != activeIconOriginal) {

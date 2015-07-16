@@ -16,6 +16,7 @@
 #import "TiAppiOSLocalNotificationProxy.h"
 #import "TiAppiOSNotificationActionProxy.h"
 #import "TiAppiOSNotificationCategoryProxy.h"
+#import "TiAppiOSUserDefaultsProxy.h"
 
 
 @implementation TiAppiOSProxy
@@ -83,6 +84,10 @@
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector
              (didRegisterUserNotificationSettingsNotification:) name:kTiUserNotificationSettingsNotification object:nil];
         }
+        if ((count == 1) && [type isEqual:@"watchkitextensionrequest"]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(didReceiveWatchExtensionRequestNotification:) name:KTiWatchKitExtensionRequest object:nil];
+        }
     }
 
 }
@@ -128,10 +133,28 @@
         if ((count == 1) && [type isEqual:@"usernotificationsetting"]) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:kTiUserNotificationSettingsNotification object:nil];
         }
+        if ((count == 1) && [type isEqual:@"watchkitextensionrequest"]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:KTiWatchKitExtensionRequest object:nil];
+        }
     }
 }
 
 #pragma mark Public
+
+-(id)createUserDefaults:(id)args
+{
+    NSString *suiteName;
+    ENSURE_SINGLE_ARG(args,NSDictionary);
+    ENSURE_ARG_FOR_KEY(suiteName, args, @"suiteName", NSString);
+    
+    NSUserDefaults *defaultsObject = [[NSUserDefaults alloc] initWithSuiteName:suiteName];
+    
+    TiAppiOSUserDefaultsProxy *userDefaultsProxy = [[[TiAppiOSUserDefaultsProxy alloc] _initWithPageContext:[self executionContext]] autorelease];
+    
+    userDefaultsProxy.defaultsObject = defaultsObject;
+    
+    return userDefaultsProxy;
+}
 
 -(id)registerBackgroundService:(id)args
 {
@@ -530,16 +553,45 @@
          withObject:[self formatUserNotificationSettings:(UIUserNotificationSettings*)[notificationSettings object]]];
 }
 
+#pragma mark Apple Watchkit notifications
+
+-(void)didReceiveWatchExtensionRequestNotification:(NSNotification*)notif
+{
+    [self fireEvent:@"watchkitextensionrequest" withObject:[notif userInfo]];
+}
+
+#pragma mark Apple Watchkit handleWatchKitExtensionRequest reply
+
+-(void)sendWatchExtensionReply:(id)args
+{
+    if(![TiUtils isIOS8OrGreater]) {
+        return;
+    }
+    
+    enum Args {
+        kArgKey = 0,
+        kArgCount,
+        kArgUserInfo = kArgCount
+    };
+    
+    ENSURE_TYPE(args,NSArray);
+    ENSURE_ARG_COUNT(args, kArgCount);
+    
+    NSString *key = [TiUtils stringValue:[args objectAtIndex:kArgKey]];
+
+    if([args count] > 1){
+        [[TiApp app] watchKitExtensionRequestHandler:key withUserInfo:[args objectAtIndex:kArgUserInfo]];
+    }else{
+        [[TiApp app] watchKitExtensionRequestHandler:key withUserInfo:nil];
+    }
+}
+
 -(void)setMinimumBackgroundFetchInterval:(id)value
 {
     ENSURE_TYPE(value, NSNumber);
-    if ([TiUtils isIOS7OrGreater]) {
-        double fetchInterval = [TiUtils doubleValue:value];
-        fetchInterval = MAX(MIN(fetchInterval, UIApplicationBackgroundFetchIntervalNever),UIApplicationBackgroundFetchIntervalMinimum);
-        [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:fetchInterval];
-    } else {
-        DebugLog(@"[ERROR] Methond only available on iOS 7 and above.");
-    }
+    double fetchInterval = [TiUtils doubleValue:value];
+    fetchInterval = MAX(MIN(fetchInterval, UIApplicationBackgroundFetchIntervalNever),UIApplicationBackgroundFetchIntervalMinimum);
+    [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:fetchInterval];
 }
 
 -(void)endBackgroundHandler:(id)arg
@@ -553,17 +605,11 @@
 }
 
 -(NSNumber*)BACKGROUNDFETCHINTERVAL_MIN {
-    if ([TiUtils isIOS7OrGreater]) {
-        return NUMDOUBLE(UIApplicationBackgroundFetchIntervalMinimum);
-    }
-    return nil;
+    return NUMDOUBLE(UIApplicationBackgroundFetchIntervalMinimum);
 }
 
 -(NSNumber*)BACKGROUNDFETCHINTERVAL_NEVER {
-    if ([TiUtils isIOS7OrGreater]) {
-        return NUMDOUBLE(UIApplicationBackgroundFetchIntervalNever);
-    }
-    return nil;
+    return NUMDOUBLE(UIApplicationBackgroundFetchIntervalNever);
 }
 
 -(NSNumber*)USER_NOTIFICATION_TYPE_NONE
