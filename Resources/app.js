@@ -10,7 +10,9 @@ var storedLastName = Titanium.App.Properties.getString("last_name");
 var storedUsername = Titanium.App.Properties.getString("username");
 var storedPassword = Titanium.App.Properties.getString("password");
 var storedLogInStatus = Titanium.App.Properties.getString("loggedIn");
-
+//Delete
+//asdfa dfa adsfasd fasdfasdfasdfadsfa
+//End Delete
 Ti.App.addEventListener('grantEntrance', function(event)  
 {  
 	var storedFirstName = Titanium.App.Properties.getString("first_name");
